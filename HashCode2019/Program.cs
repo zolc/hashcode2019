@@ -99,7 +99,7 @@ namespace HashCode2019
                             chosenSecondSlideIndex = secondSlideIndex;
 
                             // TODO: CHANGE CONDITION TO  == 0, 2, 3...
-                            if (currDist == 1)
+                            if (currDist == 0)
                             {
                                 break;
                             }
