@@ -25,19 +25,19 @@ namespace HashCode2019
             var horizontal = photoList.Where(p => p.Orientation == Orientation.Horizontal);
 
 
-            var buckets = new List<Slide>[200];
-            var buckets2 = new List<Slide>[200];
-            for (int i = 0; i < 200; ++i)
+            var buckets = new List<Slide>[100];
+            var buckets2 = new List<Slide>[100];
+            for (int i = 0; i < 100; ++i)
             {
                 buckets[i] = new List<Slide>();
-                buckets2[i] = new List<Slide>();
+                //buckets2[i] = new List<Slide>();
             }
 
             foreach (var h in horizontal)
                 buckets[h.TagList.Count].Add(new HorizontalSlide(h));
 
             var maxNonEmptyBucket = 0;
-            for (int i = 1; i < 200; ++i)
+            for (int i = 1; i < 100; ++i)
                 if (buckets[i].Count != 0)
                     maxNonEmptyBucket = i;
 
@@ -52,7 +52,7 @@ namespace HashCode2019
                 var secondPhotoTagsCount = verticalClone[1].TagList.Count;
                 var secondPhotoIndex = 1;
                 var distanceToSecond = Math.Abs(targetTagsCount - secondPhotoTagsCount);
-                for (var i = 2; i < verticalClone.Count; i++)   
+                for (var i = 2; i < verticalClone.Count; i++)
                 {
                     var currentPhoto = verticalClone[i];
                     var currentPhotoTagsCount = currentPhoto.TagList.Count;
@@ -64,30 +64,68 @@ namespace HashCode2019
                         distanceToSecond = distanceToCurrent;
                     }
                 }
-
                 var slide = new VerticalSlide(firstPhoto, verticalClone[secondPhotoIndex]);
-                buckets2[firstPhoto.TagList.Count + secondPhotoTagsCount].Add(slide);
+
+                buckets[slide.Tags.Count].Add(slide);
                 verticalClone.RemoveAt(secondPhotoIndex);
                 verticalClone.RemoveAt(0);
             }
 
-            Console.WriteLine("Horizontal");
-            for (int i = 1; i < maxNonEmptyBucket; ++i)
+            maxNonEmptyBucket = 0;
+            for (int i = 1; i < 100; ++i)
+                if (buckets[i].Count != 0)
+                    maxNonEmptyBucket = i;
+
+            var presentation = new List<Slide>() { buckets[maxNonEmptyBucket][0] };
+            buckets[maxNonEmptyBucket].RemoveAt(0);
+
+            for (int i = maxNonEmptyBucket; i > 0; --i)
             {
-                Console.WriteLine($"{i}: {buckets[i].Count}");
+                while (buckets[i].Count > 0)
+                {
+                    var prevDistance = int.MaxValue;
+                    var chosenSecondSlide = buckets[i][0];
+                    var chosenSecondSlideIndex = 0;
+                    for (int secondSlideIndex = 0; secondSlideIndex < buckets[i].Count; ++secondSlideIndex)
+                    {
+                        var secondSlide = buckets[i][secondSlideIndex];
+                        var intersectionCount = presentation[presentation.Count - 1].Tags.Intersect(secondSlide.Tags).Count();
+                        var target = secondSlide.Tags.Count / 2;
+                        var currDist = Math.Abs(intersectionCount - target);
+                        if (currDist < prevDistance)
+                        {
+                            prevDistance = currDist;
+                            chosenSecondSlide = secondSlide;
+                            chosenSecondSlideIndex = secondSlideIndex;
+
+                            // TODO: CHANGE CONDITION TO  == 0, 2, 3...
+                            if (currDist == 1)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    presentation.Add(chosenSecondSlide);
+                    buckets[i].RemoveAt(chosenSecondSlideIndex);
+                }
             }
 
-            Console.WriteLine("Vertical");
-            for (int i = 1; i < 150; ++i)
-            {
-                Console.WriteLine($"{i}: {buckets2[i].Count}");
-            }
 
-            //var slides = new List<Slide>();
-            //foreach (var h in horizontal)
-            //    slides.Add(new Slide(h));
+            //Console.WriteLine("Horizontal");
+            //for (int i = 1; i < 100; ++i)
+            //{
+            //    Console.WriteLine($"{i}: {buckets[i].Count}");
+            //}
 
-            //Writer.WriteToFile(args[1], slides);
+            //Console.WriteLine("Vertical");
+            //for (int i = 1; i < 100; ++i)
+            //{
+            //    Console.WriteLine($"{i}: {buckets2[i].Count}");
+            //}
+
+
+            Writer.WriteToFile(args[1], presentation);
         }
     }
 }

@@ -9,14 +9,14 @@ namespace HashCode2019
     {
         public virtual Orientation Orientation { get; set; }
 
-
+        public abstract List<string> Tags { get; }
     }
 
     public class HorizontalSlide : Slide
     {
         public override Orientation Orientation => Orientation.Horizontal;
         public Photo Photo { get; }
-        public List<string> Tags => Photo.TagList;
+        public override List<string> Tags => Photo.TagList;
 
         public HorizontalSlide(Photo horizontalPhoto)
         {
@@ -32,12 +32,13 @@ namespace HashCode2019
     {
         public override Orientation Orientation => Orientation.Vertical;
         public List<Photo> Photos { get; }
-        public List<string> Tags => Photos[0].TagSet.Union(Photos[1].TagSet).ToList();
+        public override List<string> Tags { get; }
 
 
         public VerticalSlide(Photo verticalOne, Photo verticalTwo)
         {
             Photos = new List<Photo>() { verticalOne, verticalTwo };
+            Tags = Photos[0].TagSet.Union(Photos[1].TagSet).ToList();
         }
         public override string ToString()
         {
