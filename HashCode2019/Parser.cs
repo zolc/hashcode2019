@@ -22,6 +22,7 @@ namespace HashCode2019
                     var split = line.Split(' ');
                     photoList.Add(new Photo()
                     {
+                        Id = i,
                         Orientation = split[0] == "H" ? Orientation.Horizontal : Orientation.Vertical,
                         TagList = new List<string>(split.Skip(2))
                     });

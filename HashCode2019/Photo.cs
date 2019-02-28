@@ -6,7 +6,7 @@ namespace HashCode2019
 {
     public class Photo
     {
-
+        public int Id { get; set; }
         public Orientation Orientation { get ; set ; }
         public HashSet<string> TagSet { get; private set; }
         private List<string> _tagList;

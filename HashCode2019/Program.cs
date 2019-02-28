@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HashCode2019
@@ -15,11 +16,19 @@ namespace HashCode2019
 
             var photoList = Parser.Parse(args[0]);
 
-            foreach (var photo in photoList)
+            var vertical = photoList.Where(p => p.Orientation == Orientation.Vertical);
+            var horizontal = photoList.Where(p => p.Orientation == Orientation.Horizontal);
+
+            var slides = new List<Slide>();
+            foreach (var h in horizontal)
             {
-                Console.WriteLine($"{photo.Orientation} [{String.Join(',', photo.TagList)}]"); 
+                slides.Add(new Slide(h));
             }
 
+            foreach(var s in slides)
+            {
+                Console.WriteLine(s);
+            }
         }
     }
 }
