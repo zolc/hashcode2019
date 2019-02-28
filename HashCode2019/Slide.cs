@@ -7,38 +7,42 @@ namespace HashCode2019
 {
     public abstract class Slide
     {
-        public Orientation Orientation { get; set; }
-        public List<Photo> Photos { get; set; }
+        public virtual Orientation Orientation { get; set; }
 
-        public Slide(Photo horizontalPhoto)
+
+    }
+
+    public class HorizontalSlide : Slide
+    {
+        public override Orientation Orientation => Orientation.Horizontal;
+        public Photo Photo { get; }
+        public List<string> Tags => Photo.TagList;
+
+        public HorizontalSlide(Photo horizontalPhoto)
         {
-            Photos = new List<Photo>() { horizontalPhoto };
-            Orientation = Orientation.Horizontal;
+            this.Photo = horizontalPhoto;
         }
 
-        public Slide(Photo verticalOne, Photo verticalTwo)
+        public override string ToString()
+        {
+            return Photo.Id.ToString();
+        }
+    }
+    public class VerticalSlide : Slide
+    {
+        public override Orientation Orientation => Orientation.Vertical;
+        public List<Photo> Photos { get; }
+        public List<string> Tags => Photos[0].TagSet.Union(Photos[1].TagSet).ToList();
+
+
+        public VerticalSlide(Photo verticalOne, Photo verticalTwo)
         {
             Photos = new List<Photo>() { verticalOne, verticalTwo };
-            Orientation = Orientation.Vertical;
         }
-
         public override string ToString()
         {
             return String.Join(' ', Photos.Select(p => p.Id));
         }
     }
-
-    public class HorizontalSlide : Slide
-    {
-        public Orientation Orientation => Orientation.Horizontal;
-        public List<string> Tags =>
-
-    }
-    public class VerticalSlide : Slide
-    {
-        public Orientation Orientation => Orientation.Vertical;
-
-        public List<string> Tags =>
-
-    }
+    
 }

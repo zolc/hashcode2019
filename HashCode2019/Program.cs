@@ -34,7 +34,7 @@ namespace HashCode2019
             }
 
             foreach (var h in horizontal)
-                buckets[h.TagList.Count].Add(new Slide(h));
+                buckets[h.TagList.Count].Add(new HorizontalSlide(h));
 
             var maxNonEmptyBucket = 0;
             for (int i = 1; i < 200; ++i)
@@ -65,7 +65,7 @@ namespace HashCode2019
                     }
                 }
 
-                var slide = new Slide(firstPhoto, verticalClone[secondPhotoIndex]);
+                var slide = new VerticalSlide(firstPhoto, verticalClone[secondPhotoIndex]);
                 buckets2[firstPhoto.TagList.Count + secondPhotoTagsCount].Add(slide);
                 verticalClone.RemoveAt(secondPhotoIndex);
                 verticalClone.RemoveAt(0);
