@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HashCode2019
 {
-    public class Slide
+    public abstract class Slide
     {
         public Orientation Orientation { get; set; }
         public List<Photo> Photos { get; set; }
@@ -26,5 +26,19 @@ namespace HashCode2019
         {
             return String.Join(' ', Photos.Select(p => p.Id));
         }
+    }
+
+    public class HorizontalSlide : Slide
+    {
+        public Orientation Orientation => Orientation.Horizontal;
+        public List<string> Tags =>
+
+    }
+    public class VerticalSlide : Slide
+    {
+        public Orientation Orientation => Orientation.Vertical;
+
+        public List<string> Tags =>
+
     }
 }
